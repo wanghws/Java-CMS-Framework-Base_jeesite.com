@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.1.xsd"
+	default-lazy-init="true">
+
+	<description>Jedis Configuration</description>
+
+    <!-- 加载配置属性文件 -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:redis.properties" />
+	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="minIdle" value="${redis.minIdle}"/>
+		<property name="maxTotal" value="${redis.maxTotal}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+		<property name="maxWaitMillis" value="${redis.maxWait}"/>
+		<property name="testWhileIdle" value="${redis.testWhileIdle}"/>
+		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}"/>
+		<property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}"/>
+		<property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}"/>
+	</bean>
+
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" scope="singleton" destroy-method="destroy">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1">
+			<list>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg name="host" value="${redis.uri}" />
+					<property name="password" value="${redis.password}"/>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="redis" class="com.demo.cms.commons.redis.Redis">
+		<constructor-arg ref="shardedJedisPool"/>
+	</bean>
+	
+</beans>
