@@ -99,11 +99,10 @@
 		<property name="annotationClass" value="com.demo.cms.commons.annotation.MyBatisDao"/>
 	</bean>
 
+<!-- AOP配置事物 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dynamicDataSource" />
 	</bean>
-
-	<!-- AOP配置事物 -->
 	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="query*"  	propagation="REQUIRED"  read-only="true" />
@@ -119,19 +118,22 @@
 			<tx:method name="*"  		propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
-
-	<!-- 配置AOP切面 -->
 	<aop:config>
-		<aop:pointcut id="transactionPointcut" expression="execution(* com.demo.cms.modules.*.service.*.*(..))"/>
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.siyongbao.base.modules.*.service.*.*(..))"/>
 		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
 	</aop:config>
-	<bean id="dynamicDataSourceAdvice" class="com.demo.cms.commons.database.DynamicDataSourceAspect" lazy-init="false" />
+
+	<!-- AOP读写分离 -->
+	<bean id="dynamicDataSourceAdvice" class="com.siyongbao.base.commons.database.DynamicDataSourceAspect" lazy-init="false" />
 	<aop:config>
 		<aop:aspect id="c" ref="dynamicDataSourceAdvice">
-			<aop:pointcut id="tx" expression="execution(* com.demo.cms.modules.*.service.*.*(..)) and  execution(* com.demo.cms.commons.security..*(..))"/>
+			<aop:pointcut id="tx" expression="execution(* com.siyongbao.base.modules.*.service.*.*(..)) and  execution(* com.siyongbao.base.commons.security..*(..))"/>
 			<aop:before method="before" pointcut-ref="tx"></aop:before>
 		</aop:aspect>
 	</aop:config>
+	
+	<bean id="sessionDAO" class="com.demo.cms.commons.security.shiro.session.CacheSessionDAO"/>
+
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
