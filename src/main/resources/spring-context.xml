@@ -99,7 +99,9 @@
 		<property name="annotationClass" value="com.demo.cms.commons.annotation.MyBatisDao"/>
 	</bean>
 
-<!-- AOP配置事物 -->
+	<!-- 读写切换 -->
+	<bean id="dynamicDataSourceAspect" class="com.siyongbao.base.commons.database.DynamicDataSourceAspect" lazy-init="false" />
+	<!-- 配置事物 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dynamicDataSource" />
 	</bean>
@@ -118,18 +120,11 @@
 			<tx:method name="*"  		propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
+	<!-- AOP -->
 	<aop:config>
-		<aop:pointcut id="transactionPointcut" expression="execution(* com.siyongbao.base.modules.*.service.*.*(..))"/>
-		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
-	</aop:config>
-
-	<!-- AOP读写分离 -->
-	<bean id="dynamicDataSourceAdvice" class="com.siyongbao.base.commons.database.DynamicDataSourceAspect" lazy-init="false" />
-	<aop:config>
-		<aop:aspect id="c" ref="dynamicDataSourceAdvice">
-			<aop:pointcut id="tx" expression="execution(* com.siyongbao.base.modules.*.service.*.*(..)) and  execution(* com.siyongbao.base.commons.security..*(..))"/>
-			<aop:before method="before" pointcut-ref="tx"></aop:before>
-		</aop:aspect>
+		<aop:pointcut id="servicePointcut" expression="execution(* com.siyongbao.base.modules.*.service..*(..))"/>
+		<aop:advisor advice-ref="transactionAdvice" order="2" pointcut-ref="servicePointcut"  />
+		<aop:advisor advice-ref="dynamicDataSourceAspect" order="1" pointcut-ref="servicePointcut" />
 	</aop:config>
 	
 	<bean id="sessionDAO" class="com.demo.cms.commons.security.shiro.session.CacheSessionDAO"/>
