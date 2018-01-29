@@ -62,7 +62,6 @@
 				<label class="control-label">附件：</label>
 				<div class="controls">
 					<form:hidden id="files" path="files" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-					<sys:ckfinder input="files" type="files" uploadPath="/oa/notify" selectMultiple="true"/>
 				</div>
 			</div>
 			<div class="control-group">
@@ -86,7 +85,6 @@
 				<label class="control-label">附件：</label>
 				<div class="controls">
 					<form:hidden id="files" path="files" htmlEscape="false" maxlength="255" class="input-xlarge"/>
-					<sys:ckfinder input="files" type="files" uploadPath="/oa/notify" selectMultiple="true" readonly="true" />
 				</div>
 			</div>
 			<div class="control-group">

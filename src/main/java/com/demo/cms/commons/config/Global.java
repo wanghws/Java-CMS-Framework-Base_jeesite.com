@@ -7,7 +7,6 @@ import com.demo.cms.commons.utils.StringUtils;
 import com.demo.cms.commons.utils.PropertiesLoader;
 import com.google.common.collect.Maps;
 import org.springframework.core.io.DefaultResourceLoader;
-import com.ckfinder.connector.ServletContextFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -81,19 +80,7 @@ public class Global {
 	 * @return
 	 */
 	public static String getUserfilesBaseDir() {
-		String dir = getConfig("userfiles.basedir");
-		if (StringUtils.isBlank(dir)){
-			try {
-				dir = ServletContextFactory.getServletContext().getRealPath("/");
-			} catch (Exception e) {
-				return "";
-			}
-		}
-		if(!dir.endsWith("/")) {
-			dir += "/";
-		}
-//		System.out.println("userfiles.basedir: " + dir);
-		return dir;
+		return getConfig("userfiles.basedir");
 	}
 
 	public static String getCloudPublicSpace(){
