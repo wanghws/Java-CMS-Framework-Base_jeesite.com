@@ -87,8 +87,8 @@ public class Global {
 		return getConfig("cloud_public_space");
 	}
 
-	public static boolean getAPIDebug(){
-		String debug =  getConfig("api_debug");
+	public static boolean getDebug(){
+		String debug =  getConfig("debug");
 		return debug.equalsIgnoreCase("true");
 	}
 
