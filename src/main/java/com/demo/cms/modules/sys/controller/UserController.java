@@ -6,7 +6,6 @@ package com.demo.cms.modules.sys.controller;
 import com.demo.cms.commons.beanvalidator.BeanValidators;
 import com.demo.cms.commons.config.Global;
 import com.demo.cms.commons.utils.Page;
-import com.demo.cms.commons.utils.CodeUtil;
 import com.demo.cms.commons.utils.DateUtils;
 import com.demo.cms.commons.utils.StringUtils;
 import com.demo.cms.commons.utils.excel.ExportExcel;
@@ -119,10 +118,7 @@ public class UserController extends BaseController {
 			}
 		}
 		user.setRoleList(roleList);
-		// 保存用户信息
-		if(null==user.getNo()){
-			user.setNo(CodeUtil.genOrderNo(CodeUtil.CODE_PREFIX_SYSUSER));
-		}
+
 
 		if (null==user.getUserType()){
 			user.setUserType("3");
