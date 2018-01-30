@@ -1,14 +1,16 @@
 package com.demo.cms.commons.database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by liufm on 15/9/25.
- */
+
 public class DynamicDataSource extends AbstractRoutingDataSource implements InitializingBean {
+    private final Logger logger = LoggerFactory.getLogger(DynamicDataSource.class);
+
 
     private AtomicInteger counter = new AtomicInteger(1);
     private String writeDataSource;
