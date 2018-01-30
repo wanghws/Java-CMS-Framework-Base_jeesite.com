@@ -100,7 +100,7 @@
 	</bean>
 
 	<!-- 读写切换 -->
-	<bean id="dynamicDataSourceAspect" class="com.siyongbao.base.commons.database.DynamicDataSourceAspect" lazy-init="false" />
+	<bean id="dynamicDataSourceAspect" class="com.demo.cms.commons.database.DynamicDataSourceAspect" lazy-init="false" />
 	<!-- 配置事物 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dynamicDataSource" />
@@ -122,7 +122,7 @@
 	</tx:advice>
 	<!-- AOP -->
 	<aop:config>
-		<aop:pointcut id="servicePointcut" expression="execution(* com.siyongbao.base.modules.*.service..*(..))"/>
+		<aop:pointcut id="servicePointcut" expression="execution(* com.demo.cms.modules.*.service..*(..))"/>
 		<aop:advisor advice-ref="transactionAdvice" order="2" pointcut-ref="servicePointcut"  />
 		<aop:advisor advice-ref="dynamicDataSourceAspect" order="1" pointcut-ref="servicePointcut" />
 	</aop:config>

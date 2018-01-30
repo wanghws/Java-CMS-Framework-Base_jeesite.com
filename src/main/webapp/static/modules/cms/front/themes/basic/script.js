@@ -1,5 +1,5 @@
 /*!
- * Copyright &copy; 2017 siyongbao.com All rights reserved.
+ * Copyright &copy; 2017 demo.com All rights reserved.
  */
 
 // 添加收藏

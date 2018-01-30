@@ -1,8 +1,8 @@
 /*!
- * Copyright &copy; 2017 siyongbao.com All rights reserved.
+ * Copyright &copy; 2017 demo.com All rights reserved.
  * 
  * 通用公共方法
- * @author siyongbao.com
+ * @author demo.com
  * @version 2014-4-29
  */
 $(document).ready(function() {

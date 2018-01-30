@@ -1,4 +1,4 @@
-<%@page import="com.siyongbao.base.commons.utils.ImageGeo"%>
+<%@page import="com.demo.base.commons.utils.ImageGeo"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <!DOCTYPE html>

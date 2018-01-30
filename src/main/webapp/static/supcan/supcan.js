@@ -1,8 +1,8 @@
 /*!
- * Copyright &copy; 2017 siyongbao.com All rights reserved.
+ * Copyright &copy; 2017 demo.com All rights reserved.
  * 
  * 硕正组件封装
- * @author siyongbao.com
+ * @author demo.com
  * @version 2013-11-09
  */
 
