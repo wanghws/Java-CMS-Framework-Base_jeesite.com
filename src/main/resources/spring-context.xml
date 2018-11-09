@@ -132,10 +132,6 @@
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-		<property name="configLocation" value="classpath:ehcache-local.xml" />
-	</bean>
-
     <!--<task:executor id="executor" pool-size="10"/>-->
 	<!--<task:scheduler id="scheduler" pool-size="10"/>-->
     <!--<task:annotation-driven scheduler="scheduler" executor="executor" proxy-target-class="true"/>-->

@@ -10,15 +10,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by demo on 16/9/20.
- */
 public class Redis{
     private final Logger logger = LoggerFactory.getLogger(Redis.class);
 
     private ShardedJedisPool shardedJedisPool;
 
     public Redis(ShardedJedisPool shardedJedisPool) {
+        logger.info("shardedJedisPool:"+shardedJedisPool);
         this.shardedJedisPool = shardedJedisPool;
     }
 
@@ -162,6 +160,25 @@ public class Redis{
         return defaultValue;
     }
     /**
+     * 取得对象
+     * */
+    public String get(String key,String v,String f) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            String value = shardedJedis.get(key);
+
+            return value;
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+
+        return v;
+    }
+    /**
      * 删除对象
      * */
     public boolean del(String key) {
@@ -259,5 +276,143 @@ public class Redis{
             returnResource(shardedJedis);
         }
         return false;
+    }
+
+    /**
+     * 进队列
+     * */
+    public boolean rpush(String key, Object value) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            byte[] obj = SerializeUtil.serialize(value);
+            if(null==obj)return false;
+            shardedJedis.rpush(key.getBytes(), obj);
+            return true;
+        } catch (Exception ex) {
+            logger.error("redis set error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+        return false;
+    }
+    /**
+     * 出队列
+     * */
+    public Object lpop(String key,Object defaultValue) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            byte[] value = shardedJedis.lpop(key.getBytes());
+            if (null==value)return defaultValue;
+
+            return SerializeUtil.unserialize(value);
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+
+        return defaultValue;
+    }
+
+    /**
+     * 队列长度
+     * */
+    public Long llen(String key) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.llen(key.getBytes());
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+
+        return 0L;
+    }
+
+    /**
+     * 计数器-增加定量
+     * */
+    public long incrBy(String key, long integer) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.incrBy(key, integer);
+        } catch (Exception ex) {
+            logger.error("redis incr error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+        return 0;
+    }
+
+    /**
+     * 计数器-减少定量
+     * */
+    public long decrBy(String key, long integer) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.decrBy(key, integer);
+        } catch (Exception ex) {
+            logger.error("redis decr error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+        return 0;
+    }
+
+    public Long setnx(String key,String v) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.setnx(key,v);
+
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+
+        return 0L;
+    }
+
+    public String getSet(String key,String v) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.getSet(key,v);
+
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+        return null;
+    }
+
+    public String getStr(String key) {
+        ShardedJedis shardedJedis = null;
+        try {
+            shardedJedis = shardedJedisPool.getResource();
+            return shardedJedis.get(key);
+        } catch (Exception ex) {
+            logger.error("redis get error.", ex);
+            returnResource(shardedJedis);
+        } finally {
+            returnResource(shardedJedis);
+        }
+
+        return null;
     }
 }

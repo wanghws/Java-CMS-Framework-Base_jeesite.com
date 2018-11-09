@@ -8,6 +8,21 @@ JeeSite是基于多个优秀的开源项目，高度整合封装而成的高效�
 
 初始管理员账号：admin   密码：admin
 
+## 数据库初始化
+
+mysql> source /data/framework.sql
+mysql> CREATE USER 'work'@'%' identified by '123456';
+mysql> GRANT ALL PRIVILEGES ON demo.* to 'work'@'%';
+
+## 启动
+
+mvn> jetty:run
+
+## Update v1.0.1
+
+1.  Shrio等部分包版本升级
+2.  缓存从EHCache更换为Redis,同时Shrio的缓存也更换为Redis
+
 ## 以下为修改部分
 
 1.	表自增ID改为Long型,使用了[分布式唯一ID生成器Twitter 的 Snowflake idworker java版本]
