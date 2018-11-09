@@ -36,20 +36,19 @@
 
 	<bean id="abstractDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="filters" value="stat"/>
+		<property name="maxActive" value="${jdbc.maxActive}"/>
+		<property name="initialSize" value="${jdbc.initialSize}"/>
 		<property name="maxWait" value="${jdbc.maxWait}"/>
+		<property name="minIdle" value="${jdbc.minIdle}"/>
 		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
 		<property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
-		<property name="validationQuery" value="SELECT 'x'"/>
 		<property name="testWhileIdle" value="true"/>
-		<property name="testOnBorrow" value="false"/>
+		<property name="testOnBorrow" value="true"/>
 		<property name="testOnReturn" value="false"/>
-		<property name="poolPreparedStatements" value="true"/>
-		<property name="maxPoolPreparedStatementPerConnectionSize" value="${jdbc.maxPoolPreparedStatementPerConnectionSize}"/>
-		<property name="connectionProperties" value="config.decrypt=true" />
-		<property name="filters" value="stat"/>
-		<property name="initialSize" value="${jdbc.initialSize}"/>
-		<property name="maxActive" value="${jdbc.maxActive}"/>
-		<property name="minIdle" value="${jdbc.minIdle}"/>
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxOpenPreparedStatements" value="20" />
+		<property name="validationQuery" value="SELECT 'x'"/>
 	</bean>
 
 	<!-- 数据源配置, 使用 BoneCP 数据库连接池 -->
