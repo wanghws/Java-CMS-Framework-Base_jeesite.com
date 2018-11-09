@@ -24,6 +24,7 @@ mvn> jetty:run
 
 1.  Shrio等部分包版本升级
 2.  缓存从EHCache更换为Redis,同时Shrio的缓存也更换为Redis
+3.  分布式唯一ID生成器bug fix
 
 ## 以下为修改部分
 

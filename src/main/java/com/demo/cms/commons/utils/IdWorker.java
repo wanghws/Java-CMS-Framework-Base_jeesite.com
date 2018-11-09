@@ -21,6 +21,7 @@ public class IdWorker {
     private long lastTimestamp = -1L;
 
     private IdWorker(long workerId) {
+        System.out.println("workerId:"+workerId);
         if (workerId > this.maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", this.maxWorkerId));
         }
@@ -28,7 +29,7 @@ public class IdWorker {
     }
 
     public synchronized long nextId() throws Exception {
-        long timestamp = this.timeGen();
+        long timestamp = timeGen();
         if (this.lastTimestamp == timestamp) { // 如果上一个timestamp与新产生的相等，则sequence加一(0-4095循环); 对新的timestamp，sequence从0开始
             this.sequence = this.sequence + 1 & this.sequenceMask;
             if (this.sequence == 0) {
@@ -47,11 +48,18 @@ public class IdWorker {
         return timestamp - this.epoch << this.timestampLeftShift | this.workerId << this.workerIdShift | this.sequence;
     }
 
-    private static IdWorker flowIdWorker = new IdWorker(1);
-    public static IdWorker getFlowIdWorkerInstance() {
-        return flowIdWorker;
-    }
+    private static IdWorker instance;
 
+    public static IdWorker getFlowIdWorkerInstance() {
+        if (instance == null) {
+            synchronized (IdWorker.class) {
+                if (instance == null) {
+                    instance = new IdWorker(workerIp());
+                }
+            }
+        }
+        return instance;
+    }
 
 
     /**
@@ -72,12 +80,13 @@ public class IdWorker {
         return System.currentTimeMillis();
     }
 
-    public static void main(String[] args) throws Exception {
-        System.out.println(timeGen());
-
-        IdWorker idWorker = IdWorker.getFlowIdWorkerInstance();
-        // System.out.println(Long.toBinaryString(idWorker.nextId()));
-        System.out.println(idWorker.nextId());
-        System.out.println(idWorker.nextId());
+    public static Long workerIp() {
+        String ipString = IPUtils.getInternalIp();
+        Long[] ip = new Long[4];
+        int pos1= ipString.indexOf(".");
+        int pos2= ipString.indexOf(".",pos1+1);
+        int pos3= ipString.indexOf(".",pos2+1);
+        ip[3] = Long.parseLong(ipString.substring(pos3+1));
+        return ip[3];
     }
 }
