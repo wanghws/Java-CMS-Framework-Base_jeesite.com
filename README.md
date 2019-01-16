@@ -20,6 +20,12 @@ mysql> GRANT ALL PRIVILEGES ON demo.* to 'work'@'%';
 
 mvn> jetty:run
 
+## Update 2019-01-16
+
+1.  增加maven自定义参数版本号 启动时增加参数 -Dcms.release.version=1.0
+2.  修改了shrio-redis配置
+3.  修改了redis配置
+
 ## Update v1.0.1
 
 1.  Shrio/druid等包版本升级
