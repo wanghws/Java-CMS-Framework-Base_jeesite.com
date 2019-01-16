@@ -10,11 +10,15 @@ JeeSite是基于多个优秀的开源项目，高度整合封装而成的高效�
 
 ## 数据库初始化
 
-mysql> source /data/framework.sql
+mysql> create database demo;
 
-mysql> CREATE USER 'work'@'%' identified by '123456';
+mysql> create user 'work'@'%' identified by '123456';
 
-mysql> GRANT ALL PRIVILEGES ON demo.* to 'work'@'%';
+mysql> grant all privileges ON demo.* to 'work'@'%';
+
+mysql> use demo;
+
+mysql> source framework.sql;
 
 ## 启动
 
