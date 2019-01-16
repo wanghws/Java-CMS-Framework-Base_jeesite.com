@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>${fns:getConfig('productName')} ${fns:getConfig('version')}</title>
+	<title>${fns:getConfig('productName')}&nbsp;v${fns:getConfig('version')}</title>
 	<link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
 	<meta name="decorator" content="blank"/><c:set var="tabmode" value="${empty cookie.tabmode.value ? '0' : cookie.tabmode.value}"/>
     <c:if test="${tabmode eq '1'}"><link rel="Stylesheet" href="${ctxStatic}/jerichotab/css/jquery.jerichotab.css" />
@@ -150,6 +150,9 @@
 			<div class="navbar-inner">
 				<div class="brand"><span id="productName">${fns:getConfig('productName')}</span></div>
 				<ul id="userControl" class="nav pull-right">
+					<li>
+						<a href="#" target="_blank">&nbsp;&nbsp;v${fns:getConfig('version')}&nbsp;&nbsp;</a>
+					</li>
 					<li id="themeSwitch" class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" title="主题切换"><i class="icon-th-large"></i></a>
 						<ul class="dropdown-menu">
