@@ -125,9 +125,6 @@
 		<aop:advisor advice-ref="transactionAdvice" order="2" pointcut-ref="servicePointcut"  />
 		<aop:advisor advice-ref="dynamicDataSourceAspect" order="1" pointcut-ref="servicePointcut" />
 	</aop:config>
-	
-	<bean id="sessionDAO" class="com.demo.cms.commons.security.shiro.session.CacheSessionDAO"/>
-
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 

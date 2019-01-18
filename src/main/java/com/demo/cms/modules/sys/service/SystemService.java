@@ -10,7 +10,6 @@ import com.demo.cms.modules.sys.dao.UserDao;
 import com.demo.cms.modules.sys.entity.User;
 import com.demo.cms.commons.utils.Page;
 import com.demo.cms.commons.security.Digests;
-import com.demo.cms.commons.security.shiro.session.SessionDAO;
 import com.demo.cms.commons.utils.CacheUtils;
 import com.demo.cms.commons.utils.Encodes;
 import com.demo.cms.commons.web.Servlets;
@@ -23,6 +22,7 @@ import com.demo.cms.modules.sys.security.SystemAuthorizingRealm;
 import com.demo.cms.modules.sys.utils.LogUtils;
 import com.demo.cms.modules.sys.utils.UserUtils;
 import org.apache.shiro.session.Session;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,11 +51,11 @@ public class SystemService extends BaseService implements InitializingBean {
 	@Autowired
 	private MenuDao menuDao;
 	@Autowired
-	private SessionDAO sessionDao;
+	private RedisSessionDAO sessionDao;
 	@Autowired
 	private SystemAuthorizingRealm systemAuthorizingRealm;
 	
-	public SessionDAO getSessionDao() {
+	public RedisSessionDAO getSessionDao() {
 		return sessionDao;
 	}
 
@@ -219,7 +219,7 @@ public class SystemService extends BaseService implements InitializingBean {
 	 * @return
 	 */
 	public Collection<Session> getActiveSessions(){
-		return sessionDao.getActiveSessions(false);
+		return sessionDao.getActiveSessions();
 	}
 	
 	//-- Role Service --//

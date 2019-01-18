@@ -5,6 +5,7 @@ package com.demo.cms.modules.sys.security;
 
 import com.demo.cms.commons.config.Global;
 import com.demo.cms.commons.servlet.ValidateCodeServlet;
+import com.demo.cms.commons.utils.DateUtils;
 import com.demo.cms.commons.utils.Encodes;
 import com.demo.cms.commons.utils.SpringContextHolder;
 import com.demo.cms.modules.sys.controller.LoginController;
@@ -15,6 +16,7 @@ import com.demo.cms.modules.sys.service.SystemService;
 import com.demo.cms.modules.sys.utils.LogUtils;
 import com.demo.cms.modules.sys.utils.UserUtils;
 import com.demo.cms.commons.web.Servlets;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -27,6 +29,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,7 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 系统安全认证实现类
@@ -60,7 +64,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		
-		int activeSessionSize = getSystemService().getSessionDao().getActiveSessions(false).size();
+		int activeSessionSize = getSystemService().getSessionDao().getActiveSessions().size();
 		if (logger.isDebugEnabled()){
 			logger.debug("login submit, active session size: {}, username: {}", activeSessionSize, token.getUsername());
 		}
@@ -118,7 +122,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		Principal principal = (Principal) getAvailablePrincipal(principals);
 		// 获取当前已登录的用户
 		if (!Global.TRUE.equals(Global.getConfig("user.multiAccountLogin"))){
-			Collection<Session> sessions = getSystemService().getSessionDao().getActiveSessions(true, principal, UserUtils.getSession());
+			Collection<Session> sessions = getActiveSessions(true, principal, UserUtils.getSession());
 			if (sessions.size() > 0){
 				// 如果是登录进来的，则踢出已在线用户
 				if (UserUtils.getSubject().isAuthenticated()){
@@ -296,5 +300,38 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			return id.toString();
 		}
 
+	}
+
+	public Collection<Session> getActiveSessions(boolean includeLeave) {
+		return getActiveSessions(includeLeave, null, null);
+	}
+	public Collection<Session> getActiveSessions(boolean includeLeave, Object principal, Session filterSession) {
+		// 如果包括离线，并无登录者条件。
+		if (includeLeave && principal == null){
+			return systemService.getSessionDao().getActiveSessions();
+		}
+		Set<Session> sessions = Sets.newHashSet();
+		for (Session session : systemService.getSessionDao().getActiveSessions()){
+			boolean isActiveSession = false;
+			// 不包括离线并符合最后访问时间小于等于3分钟条件。
+			if (includeLeave || DateUtils.pastMinutes(session.getLastAccessTime()) <= 3){
+				isActiveSession = true;
+			}
+			// 符合登陆者条件。
+			if (principal != null){
+				PrincipalCollection pc = (PrincipalCollection)session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+				if (principal.toString().equals(pc != null ? pc.getPrimaryPrincipal().toString() : StringUtils.EMPTY)){
+					isActiveSession = true;
+				}
+			}
+			// 过滤掉的SESSION
+			if (filterSession != null && filterSession.getId().equals(session.getId())){
+				isActiveSession = false;
+			}
+			if (isActiveSession){
+				sessions.add(session);
+			}
+		}
+		return sessions;
 	}
 }

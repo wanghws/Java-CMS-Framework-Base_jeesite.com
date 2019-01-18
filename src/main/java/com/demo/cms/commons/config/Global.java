@@ -124,7 +124,17 @@ public class Global {
 		String dm = getConfig("activiti.isSynActivitiIndetity");
 		return "true".equals(dm) || "1".equals(dm);
 	}
-    
+
+	public static boolean getAPIDebug(){
+		String debug =  getConfig("api_debug");
+		return debug.equalsIgnoreCase("true");
+	}
+
+	public static Integer getNettyPort(){
+		String port =  getConfig("netty.port");
+		return Integer.parseInt(port);
+	}
+
 	/**
 	 * 页面获取常量
 	 */

@@ -8,10 +8,6 @@
 	<bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
 		<property name="failureUrl" value="/login"/>
 	</bean>
-	<!-- https -->
-	<!--<bean id="sslFilter" class="org.apache.shiro.web.filter.authz.SslFilter">-->
-	<!--<property name="port" value="80"/>-->
-	<!--</bean>-->
 
 	<!-- 安全认证过滤器 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -22,7 +18,6 @@
 			<map>
 				<entry key="cas" value-ref="casFilter"/>
 				<entry key="authc" value-ref="formAuthenticationFilter"/>
-				<!--<entry key="ssl" value-ref="sslFilter"/>-->
 			</map>
 		</property>
 		<property name="filterChainDefinitions">
@@ -34,12 +29,13 @@
 	<bean name="shiroFilterChainDefinitions" class="java.lang.String">
 		<constructor-arg>
 			<value>
+				/api/** = anon
 				/static/** = anon
-				/weixin/** = anon
 				/servlet/**	= anon
 				/login = authc
 				/logout = logout
 				/** = user
+				/cas = cas
 			</value>
 		</constructor-arg>
 	</bean>
@@ -52,8 +48,8 @@
 	</bean>
 
 	<bean id="sessionManager" class="com.demo.cms.commons.security.shiro.session.ShiroSessionManager">
-		<property name="sessionDAO" ref="redisSessionDAO"/>
-		<property name="globalSessionTimeout" value="86400000"/>
+		<property name="sessionDAO" ref="sessionDAO"/>
+		<property name="globalSessionTimeout" value="1800000"/>
 		<property name="sessionValidationInterval" value="120000"/>
 		<property name="sessionValidationSchedulerEnabled" value="true"/>
 		<property name="sessionIdCookie" ref="sessionIdCookie"/>
@@ -61,15 +57,21 @@
 	</bean>
 
 	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg name="name" value="cms.session.id"/>
+		<constructor-arg value="bms.session.id"/>
 	</bean>
+
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="rememberMe"/>
 		<property name="httpOnly" value="true"/>
 		<property name="maxAge" value="2592000"/>
 	</bean>
 
-	<bean id="redisSessionDAO" class="org.crazycake.shiro.RedisSessionDAO">
+	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+		<property name="cookie" ref="rememberMeCookie"/>
+	</bean>
+
+	<bean id="sessionDAO" class="org.crazycake.shiro.RedisSessionDAO">
 		<property name="redisManager" ref="redisManager" />
 	</bean>
 
@@ -81,10 +83,6 @@
 		<property name="port" value="${redis.port}"/>
 		<property name="password" value="${redis.password}"/>
 		<property name="jedisPoolConfig" ref="jedisPoolConfig"/>
-	</bean>
-	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
-		<property name="cookie" ref="rememberMeCookie"/>
 	</bean>
 	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>

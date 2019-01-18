@@ -2,6 +2,7 @@ package com.demo.cms.commons.security.shiro.session;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
+import org.apache.shiro.session.mgt.SessionContext;
 import org.apache.shiro.session.mgt.SessionKey;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.session.mgt.WebSessionKey;
@@ -10,13 +11,6 @@ import javax.servlet.ServletRequest;
 import java.io.Serializable;
 
 public class ShiroSessionManager extends DefaultWebSessionManager {
-    /**
-     * 获取session
-     * 优化单次请求需要多次访问redis的问题
-     * @param sessionKey
-     * @return
-     * @throws UnknownSessionException
-     */
     @Override
     protected Session retrieveSession(SessionKey sessionKey) throws UnknownSessionException {
         Serializable sessionId = getSessionId(sessionKey);
@@ -40,4 +34,24 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
         return session;
     }
 
+    @Override
+    public void validateSessions() {
+        super.validateSessions();
+    }
+
+    @Override
+    protected Session doCreateSession(SessionContext context) {
+        try {
+            return super.doCreateSession(context);
+        } catch (IllegalStateException e) {
+            return null;
+        }
+    }
+
+    @Override
+    protected Session newSessionInstance(SessionContext context) {
+        Session session = super.newSessionInstance(context);
+        session.setTimeout(getGlobalSessionTimeout());
+        return session;
+    }
 }

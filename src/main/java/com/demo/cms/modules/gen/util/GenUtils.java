@@ -63,7 +63,8 @@ public class GenUtils {
 				column.setJavaType("java.util.Date");
 				column.setShowType("dateselect");
 			}else if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "BIGINT")
-					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")){
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "TINYINT")){
 				// 如果是浮点型
 				String[] ss = StringUtils.split(StringUtils.substringBetween(column.getJdbcType(), "(", ")"), ",");
 				if (ss != null && ss.length == 2 && Integer.parseInt(ss[1])>0){
