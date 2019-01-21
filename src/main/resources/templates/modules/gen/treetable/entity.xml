@@ -5,7 +5,7 @@
 	<fileName>${ClassName}.java</fileName>
 	<content><![CDATA[
 /**
- * Copyright &copy; 2017 demo.com All rights reserved.
+ * Copyright &copy; 2019 demo.com All rights reserved.
  */
 package ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>;
 
@@ -21,8 +21,7 @@ import com.demo.cms.commons.persistence.TreeEntity;
  * @version ${functionVersion}
  */
 public class ${ClassName} extends TreeEntity<${ClassName}> {
-	
-	private static final long serialVersionUID = 1L;
+
 	<#-- 生成字段属性 -->
 	<#list table.columnList as c>
 		<#-- 如果不是基类属性 -->

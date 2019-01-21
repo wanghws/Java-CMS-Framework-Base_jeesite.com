@@ -5,12 +5,12 @@
 	<fileName>${ClassName}Dao.java</fileName>
 	<content><![CDATA[
 /**
- * Copyright &copy; 2017 demo.com All rights reserved.
+ * Copyright &copy; 2019 demo.com All rights reserved.
  */
 package ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>;
 
-import com.demo.cms.commons.persistence.TreeDao;
-import com.demo.cms.commons.persistence.annotation.MyBatisDao;
+import com.demo.cms.commons.dao.FrameworkDao;
+import com.demo.cms.commons.annotation.MyBatisDao;
 import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
 
 /**

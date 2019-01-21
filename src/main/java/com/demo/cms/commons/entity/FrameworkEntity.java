@@ -27,9 +27,10 @@ public abstract class FrameworkEntity<T> extends BaseEntity<T> {
 	protected String delFlag; 	// 删除标记（0：正常；1：删除；2：审核）
 
 	//new
-	protected Long createUser;	// 创建者
+	protected User createUser;	// 创建者
 	protected Date createTime;	// 创建日期
 	protected Date updateTime;	// 更新日期
+	protected User updateUser;	//更新者
 	protected Integer status;	// 状态
 
 
@@ -121,6 +122,10 @@ public abstract class FrameworkEntity<T> extends BaseEntity<T> {
 		}
 		this.updateDate = new Date();
 		this.createDate = this.updateDate;
+
+		if(null==this.getCreateUser() || null == this.getCreateUser().getId())this.setCreateUser(new User(1L));
+		if(null==this.getCreateBy() || null==this.getCreateBy().getId())this.setCreateBy(new User(1L));
+		if(null==this.getUpdateBy() || null == this.getUpdateBy().getId())this.setUpdateBy(new User(1L));
 	}
 
 	public void preUpdate(){
@@ -131,14 +136,20 @@ public abstract class FrameworkEntity<T> extends BaseEntity<T> {
 		this.updateDate = new Date();
 	}
 
-
-
-	public Long getCreateUser() {
+	public User getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(Long createUser) {
+	public void setCreateUser(User createUser) {
 		this.createUser = createUser;
+	}
+
+	public User getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(User updateUser) {
+		this.updateUser = updateUser;
 	}
 
 	public Date getCreateTime() {

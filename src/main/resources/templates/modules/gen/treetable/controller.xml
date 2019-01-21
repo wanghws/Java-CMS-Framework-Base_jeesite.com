@@ -5,7 +5,7 @@
 	<fileName>${ClassName}Controller.java</fileName>
 	<content><![CDATA[
 /**
- * Copyright &copy; 2017 demo.com All rights reserved.
+ * Copyright &copy; 2019 peanut.ai All rights reserved.
  */
 package ${packageName}.${moduleName}.controller<#if subModuleName != "">.${subModuleName}</#if>;
 
@@ -28,7 +28,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.demo.cms.commons.config.Global;
-import com.demo.cms.commons.controller.BaseController;
+import com.demo.cms.commons.utils.Page;
+import com.demo.cms.commons.web.BaseController;
 import com.demo.cms.commons.utils.StringUtils;
 import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
 import ${packageName}.${moduleName}.service<#if subModuleName != "">.${subModuleName}</#if>.${ClassName}Service;
@@ -39,39 +40,36 @@ import ${packageName}.${moduleName}.service<#if subModuleName != "">.${subModule
  * @version ${functionVersion}
  */
 @Controller
-@RequestMapping(value = "${/${urlPrefix}")
+@RequestMapping(value = "${className}")
 public class ${ClassName}Controller extends BaseController {
 
 	@Autowired
 	private ${ClassName}Service ${className}Service;
 	
 	@ModelAttribute
-	public ${ClassName} get(@RequestParam(required=false) String id) {
-		${ClassName} entity = null;
-		if (StringUtils.isNotBlank(id)){
-			entity = ${className}Service.get(id);
-		}
+	public ${ClassName} get(@RequestParam(required=false) Long id) {
+		${ClassName} entity = ${className}Service.get(id);
 		if (entity == null){
 			entity = new ${ClassName}();
 		}
 		return entity;
 	}
 	
-	@RequiresPermissions("${permissionPrefix}:view")
-	@RequestMapping(value = {"list", ""})
+	@RequiresPermissions("${className}:list")
+	@RequestMapping(value = "list")
 	public String list(${ClassName} ${className}, HttpServletRequest request, HttpServletResponse response, Model model) {
 		List<${ClassName}> list = ${className}Service.findList(${className}); 
 		model.addAttribute("list", list);
 		return "${lastPackageName}/${viewPrefix}List";
 	}
 
-	@RequiresPermissions("${permissionPrefix}:view")
+	@RequiresPermissions("${className}:form")
 	@RequestMapping(value = "form")
 	public String form(${ClassName} ${className}, Model model) {
-		if (${className}.getParent()!=null && StringUtils.isNotBlank(${className}.getParent().getId())){
+		if (${className}.getParent()!=null && null!=${className}.getParent().getId()){
 			${className}.setParent(${className}Service.get(${className}.getParent().getId()));
 			// 获取排序号，最末节点排序号+30
-			if (StringUtils.isBlank(${className}.getId())){
+			if (null == ${className}.getId()){
 				${ClassName} ${className}Child = new ${ClassName}();
 				${className}Child.setParent(new ${ClassName}(${className}.getParent().getId()));
 				List<${ClassName}> list = ${className}Service.findList(${className}); 
@@ -90,7 +88,7 @@ public class ${ClassName}Controller extends BaseController {
 		return "${lastPackageName}/${viewPrefix}Form";
 	}
 
-	@RequiresPermissions("${permissionPrefix}:edit")
+	@RequiresPermissions("${className}:save")
 	@RequestMapping(value = "save")
 	public String save(${ClassName} ${className}, Model model, RedirectAttributes redirectAttributes) {
 		if (!beanValidator(model, ${className})){
@@ -101,7 +99,7 @@ public class ${ClassName}Controller extends BaseController {
 		return "redirect:/${viewPrefix}/?repage";
 	}
 	
-	@RequiresPermissions("${permissionPrefix}:edit")
+	@RequiresPermissions("${className}:delete")
 	@RequestMapping(value = "delete")
 	public String delete(${ClassName} ${className}, RedirectAttributes redirectAttributes) {
 		${className}Service.delete(${className});
@@ -119,8 +117,8 @@ public class ${ClassName}Controller extends BaseController {
 			${ClassName} e = list.get(i);
 			if (StringUtils.isBlank(extId) || (extId!=null && !extId.equals(e.getId()) && e.getParentIds().indexOf(","+extId+",")==-1)){
 				Map<String, Object> map = Maps.newHashMap();
-				map.put("id", e.getId());
-				map.put("pId", e.getParentId());
+				map.put("id", String.valueOf(e.getId()));
+				map.put("pId", String.valueOf(e.getParentId()));
 				map.put("name", e.getName());
 				mapList.add(map);
 			}
@@ -129,5 +127,5 @@ public class ${ClassName}Controller extends BaseController {
 	}
 	
 }]]>
-    </content>
+	</content>
 </template>

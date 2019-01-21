@@ -16,22 +16,20 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class TreeEntity<T> extends FrameworkEntity<T> {
 
-	private static final long serialVersionUID = 1L;
-
 	protected T parent;	// 父级编号
 	protected String parentIds; // 所有父级编号
 	protected String name; 	// 机构名称
 	protected Integer sort;		// 排序
-	
+
 	public TreeEntity() {
 		super();
 		this.sort = 30;
 	}
-	
+
 	public TreeEntity(Long id) {
 		super(id);
 	}
-	
+
 	/**
 	 * 父对象，只能通过子类实现，父类实现mybatis无法读取
 	 * @return
@@ -71,13 +69,13 @@ public abstract class TreeEntity<T> extends FrameworkEntity<T> {
 	public void setSort(Integer sort) {
 		this.sort = sort;
 	}
-	
+
 	public Long getParentId() {
-		Long id = null;
-		if (parent != null){
-			id = (Long) Reflections.getFieldValue(parent, "id");
+		if (this.parent != null){
+			return (Long) Reflections.getFieldValue(this.parent, "id");
 		}
-		return null!=id ? id : null;
+		return null;
 	}
-	
+
+
 }

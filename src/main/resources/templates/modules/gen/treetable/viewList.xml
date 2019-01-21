@@ -52,10 +52,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/">${functionNameSimple}列表</a></li>
-		<shiro:hasPermission name="${permissionPrefix}:edit"><li><a href="${r"${ctx}"}/${urlPrefix}/form">${functionNameSimple}添加</a></li></shiro:hasPermission>
+		<li class="active"><a href="${r"${ctx}"}/${className}/list">${functionNameSimple}列表</a></li>
+		<shiro:hasPermission name="${permissionPrefix}:form"><li><a href="${r"${ctx}"}/${className}/form">${functionNameSimple}添加</a></li></shiro:hasPermission>
 	</ul>
-	<form:form id="searchForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/" method="post" class="breadcrumb form-search">
+	<form:form id="searchForm" modelAttribute="${className}" action="${r"${ctx}"}/${className}/list" method="post" class="breadcrumb form-search">
 		<ul class="ul-form">
 		<#list table.columnList as c>
 			<#if c.isQuery?? && c.isQuery == "1">
@@ -108,7 +108,7 @@
 				<th>${c.comments}</th>
 					</#if>
 				</#list>
-				<shiro:hasPermission name="${permissionPrefix}:edit"><th>操作</th></shiro:hasPermission>
+				<shiro:hasPermission name="${permissionPrefix}:form"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
 		<tbody id="treeTableList"></tbody>
@@ -118,7 +118,7 @@
 			<#assign firstListField = true>
 			<#list table.columnList as c>
 				<#if c.isList?? && c.isList == "1">
-			<td><#if firstListField><a href="${r"${ctx}"}/${urlPrefix}/form?id={{row.id}}"></#if>
+			<td><#if firstListField><a href="${r"${ctx}"}/${className}/form?id={{row.id}}"></#if>
 			<#if c.showType == "select" || c.showType == "checkbox" || c.showType == "radiobox">
 				{{dict.${c.simpleJavaField}}}
 			<#elseif c.showType == "userselect" || c.showType == "officeselect" || c.showType == "areaselect">
@@ -130,10 +130,10 @@
 					<#assign firstListField = false>
 				</#if>
 			</#list>
-			<shiro:hasPermission name="${permissionPrefix}:edit"><td>
-   				<a href="${r"${ctx}"}/${urlPrefix}/form?id={{row.id}}">修改</a>
-				<a href="${r"${ctx}"}/${urlPrefix}/delete?id={{row.id}}" onclick="return confirmx('确认要删除该${functionNameSimple}及所有子${functionNameSimple}吗？', this.href)">删除</a>
-				<a href="${r"${ctx}"}/${urlPrefix}/form?parent.id={{row.id}}">添加下级${functionNameSimple}</a> 
+			<shiro:hasPermission name="${permissionPrefix}:form"><td>
+   				<a href="${r"${ctx}"}/${className}/form?id={{row.id}}">修改</a>
+				<a href="${r"${ctx}"}/${className}/delete?id={{row.id}}" onclick="return confirmx('确认要删除该${functionNameSimple}及所有子${functionNameSimple}吗？', this.href)">删除</a>
+				<a href="${r"${ctx}"}/${className}/form?parent.id={{row.id}}">添加下级${functionNameSimple}</a> 
 			</td></shiro:hasPermission>
 		</tr>
 	</script>

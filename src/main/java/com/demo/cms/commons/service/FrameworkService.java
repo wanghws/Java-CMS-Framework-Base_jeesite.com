@@ -5,7 +5,9 @@ package com.demo.cms.commons.service;
 
 import com.demo.cms.commons.dao.FrameworkDao;
 import com.demo.cms.commons.entity.FrameworkEntity;
+import com.demo.cms.commons.status.Status;
 import com.demo.cms.commons.utils.Page;
+import com.demo.cms.modules.sys.entity.User;
 import com.demo.cms.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,28 +74,34 @@ public abstract class FrameworkService<D extends FrameworkDao<T>, T extends Fram
 	 */
 	@Transactional()
 	public void save(T entity) {
+		Date now = new Date();
+		User user = UserUtils.getUser();
 		if (null==entity.getId()){
 			try{
 				entity.nextId();
 			}catch (Exception e){
 				e.printStackTrace();
 			}
-			entity.setCreateTime(new Date());
-			entity.setCreateUser(UserUtils.getUser().getId());
+			if(null==entity.getCreateTime()) entity.setCreateTime(now);
+			if(null==entity.getUpdateTime()) entity.setUpdateTime(now);
+			if(null==entity.getUpdateDate()) entity.setUpdateDate(now);
+			if(null==entity.getCreateDate()) entity.setCreateDate(now);
 
-			//
-			entity.setCreateDate(new Date());
-			entity.setCreateBy(UserUtils.getUser());
-			entity.setUpdateDate(new Date());
-			entity.setUpdateBy(UserUtils.getUser());
+			if (null==entity.getStatus())entity.setStatus(Status.NORMAL.getValue());
+
+			if(null==entity.getCreateUser() || null == entity.getCreateUser().getId())entity.setCreateUser(user.getId()==null?new User(1L):user);
+			if(null==entity.getCreateBy() || null==entity.getCreateBy().getId())entity.setCreateBy(user.getId()==null?new User(1L):user);
+			if(null==entity.getUpdateBy() || null == entity.getUpdateBy().getId())entity.setUpdateBy(user.getId()==null?new User(1L):user);
+			if(null==entity.getUpdateUser() || null==entity.getUpdateUser().getId())entity.setUpdateUser(user.getId()==null?new User(1L):user);
 
 			dao.insert(entity);
 			return;
 		}
-		entity.setUpdateTime(new Date());
+		entity.setUpdateTime(now);
+		if (null==entity.getUpdateUser() || null==entity.getUpdateUser().getId())entity.setUpdateUser(user.getId()==null?new User(1L):user);
 		//
-		entity.setUpdateDate(new Date());
-		entity.setUpdateBy(UserUtils.getUser());
+		entity.setUpdateDate(now);
+		if (null==entity.getUpdateBy() || null==entity.getUpdateBy().getId())entity.setUpdateBy(user.getId()==null?new User(1L):user);
 
 		this.update(entity);
 	}

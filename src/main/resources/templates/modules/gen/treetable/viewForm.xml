@@ -33,10 +33,10 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${r"${ctx}"}/${urlPrefix}/">${functionNameSimple}列表</a></li>
-		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/form?id=${"${"+className+".id}"}&parent.id=${"${"+className+"parent.id}"}">${functionNameSimple}<shiro:hasPermission name="${permissionPrefix}:edit">${r"${not empty "+className+".id?'修改':'添加'}"}</shiro:hasPermission><shiro:lacksPermission name="${permissionPrefix}:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${r"${ctx}"}/${className}/list">${functionNameSimple}列表</a></li>
+		<li class="active"><a href="${r"${ctx}"}/${className}/form?id=${"${"+className+".id}"}&parent.id=${"${"+className+"parent.id}"}">${functionNameSimple}<shiro:hasPermission name="${className}:form">${r"${not empty "+className+".id?'修改':'添加'}"}</shiro:hasPermission><shiro:lacksPermission name="${className}:form">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${urlPrefix}/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="${className}" action="${r"${ctx}"}/${className}/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${r"${message}"}"/>		
 		<#list table.columnList as c>
@@ -45,7 +45,7 @@
 			<label class="control-label">上级${c.comments}:</label>
 			<div class="controls">
 				<sys:treeselect id="${c.simpleJavaField}" name="${c.javaFieldId}" value="${"$"}{${className}.${c.javaFieldId}}" labelName="${c.javaFieldName}" labelValue="${"$"}{${className}.${c.javaFieldName}}"
-					title="${c.comments}" url="/${urlPrefix}/treeData" extId="${'$'}{${className}.id}" cssClass="" allowClear="true"/>
+					title="${c.comments}" url="/${className}/treeData" extId="${'$'}{${className}.id}" cssClass="" allowClear="true"/>
 			</div>
 		</div>
 			<#elseif c.isEdit?? && c.isEdit == "1" && (c.isNotBaseField || c.simpleJavaField == 'remarks') && c.javaFieldId != 'parentIds'>
@@ -87,7 +87,7 @@
 			</#if>
 		</#list>
 		<div class="form-actions">
-			<shiro:hasPermission name="${permissionPrefix}:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="${className}:save"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
