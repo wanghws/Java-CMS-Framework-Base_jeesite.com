@@ -32,6 +32,7 @@
 			<template>treetable/mapper.xml</template>
 			<template>treetable/viewForm.xml</template>
 			<template>treetable/viewList.xml</template>
+			<template>treetable/viewIndex.xml</template>
 		</category>
 		<category value="treeTableAndList" label="树结构表（左树右表）">
 			<template>category-ref:dao</template>

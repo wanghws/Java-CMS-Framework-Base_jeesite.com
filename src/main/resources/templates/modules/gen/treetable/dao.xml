@@ -9,7 +9,7 @@
  */
 package ${packageName}.${moduleName}.dao<#if subModuleName != "">.${subModuleName}</#if>;
 
-import com.demo.cms.commons.dao.FrameworkDao;
+import com.demo.cms.commons.dao.TreeDao;
 import com.demo.cms.commons.annotation.MyBatisDao;
 import ${packageName}.${moduleName}.entity<#if subModuleName != "">.${subModuleName}</#if>.${ClassName};
 

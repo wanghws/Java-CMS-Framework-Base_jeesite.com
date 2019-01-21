@@ -128,8 +128,12 @@ public class ${ClassName} extends TreeEntity<${ClassName}> {
 	<#-- JSON忽略了parent对象，添加此方法获取父类Id -->
 	<#list table.columnList as c>
 		<#if c.javaFieldId == 'parent.id'>
-	public String getParentId() {
-		return parent != null && parent.getId() != null ? parent.getId() : "0";
+	@JsonSerialize(using= ToStringSerializer.class)
+	public Long getParentId() {
+		if (this.parent != null){
+			return (Long) Reflections.getFieldValue(this.parent, "id");
+		}
+		return null;
 	}
 		</#if>
 	</#list>
