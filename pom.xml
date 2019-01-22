@@ -277,7 +277,7 @@
 		<dependency>
 			<groupId>org.crazycake</groupId>
 			<artifactId>shiro-redis</artifactId>
-			<version>3.1.0</version>
+			<version>3.2.2</version>
 		</dependency>
 		<!-- SECURITY end -->
 		<!-- LOGGING begin -->

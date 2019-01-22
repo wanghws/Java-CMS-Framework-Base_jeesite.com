@@ -47,7 +47,7 @@
 		<property name="rememberMeManager" ref="rememberMeManager"/>
 	</bean>
 
-	<bean id="sessionManager" class="com.demo.cms.commons.security.shiro.session.ShiroSessionManager">
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<property name="sessionDAO" ref="sessionDAO"/>
 		<property name="globalSessionTimeout" value="1800000"/>
 		<property name="sessionValidationInterval" value="120000"/>
@@ -77,10 +77,10 @@
 
 	<bean id="cacheManager" class="org.crazycake.shiro.RedisCacheManager">
 		<property name="redisManager" ref="redisManager" />
+		<property name="principalIdFieldName" value="id"/>
 	</bean>
 	<bean id="redisManager" class="org.crazycake.shiro.RedisManager">
-		<property name="host" value="${redis.host}"/>
-		<property name="port" value="${redis.port}"/>
+		<property name="host" value="${redis.host}:${redis.port}"/>
 		<property name="password" value="${redis.password}"/>
 		<property name="jedisPoolConfig" ref="jedisPoolConfig"/>
 	</bean>
