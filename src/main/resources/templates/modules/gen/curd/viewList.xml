@@ -24,7 +24,7 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/">${functionNameSimple}列表</a></li>
+		<li class="active"><a href="${r"${ctx}"}/${urlPrefix}/list">${functionNameSimple}列表</a></li>
 		<shiro:hasPermission name="${className}:form"><li><a href="${r"${ctx}"}/${className}/form">${functionNameSimple}添加</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="${className}" action="${r"${ctx}"}/${className}/list" method="post" class="breadcrumb form-search">

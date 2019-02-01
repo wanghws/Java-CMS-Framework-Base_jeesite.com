@@ -4,11 +4,6 @@
 	   default-lazy-init="true">
 	<!-- 加载配置属性文件 -->
 
-	<!-- CAS认证过滤器 -->
-	<bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
-		<property name="failureUrl" value="/login"/>
-	</bean>
-
 	<!-- 安全认证过滤器 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
@@ -16,7 +11,6 @@
 		<property name="successUrl" value="/?login" />
 		<property name="filters">
 			<map>
-				<entry key="cas" value-ref="casFilter"/>
 				<entry key="authc" value-ref="formAuthenticationFilter"/>
 			</map>
 		</property>
@@ -24,18 +18,15 @@
 			<ref bean="shiroFilterChainDefinitions"/>
 		</property>
 	</bean>
-
 	<!-- Shiro权限过滤过滤器定义 -->
 	<bean name="shiroFilterChainDefinitions" class="java.lang.String">
 		<constructor-arg>
 			<value>
-				/api/** = anon
 				/static/** = anon
 				/servlet/**	= anon
 				/login = authc
 				/logout = logout
 				/** = user
-				/cas = cas
 			</value>
 		</constructor-arg>
 	</bean>
@@ -49,7 +40,7 @@
 
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
 		<property name="sessionDAO" ref="sessionDAO"/>
-		<property name="globalSessionTimeout" value="1800000"/>
+		<property name="globalSessionTimeout" value="18000000"/>
 		<property name="sessionValidationInterval" value="120000"/>
 		<property name="sessionValidationSchedulerEnabled" value="true"/>
 		<property name="sessionIdCookie" ref="sessionIdCookie"/>
@@ -57,7 +48,8 @@
 	</bean>
 
 	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="bms.session.id"/>
+		<constructor-arg value="demo.session.id"/>
+		<property name="path" value="/"/>
 	</bean>
 
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
@@ -77,7 +69,7 @@
 
 	<bean id="cacheManager" class="org.crazycake.shiro.RedisCacheManager">
 		<property name="redisManager" ref="redisManager" />
-		<property name="principalIdFieldName" value="id"/>
+		<property name="keyPrefix" value="shiro_redis_session:"/>
 	</bean>
 	<bean id="redisManager" class="org.crazycake.shiro.RedisManager">
 		<property name="host" value="${redis.host}:${redis.port}"/>
@@ -93,5 +85,10 @@
 	</bean>
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager"/>
+	</bean>
+
+	<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+		<property name="interval" value="1800000"/>
+		<property name="sessionManager" ref="sessionManager"/>
 	</bean>
 </beans>
