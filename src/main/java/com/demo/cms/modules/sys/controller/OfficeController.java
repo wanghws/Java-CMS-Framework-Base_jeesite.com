@@ -144,8 +144,8 @@ public class OfficeController extends BaseController {
 		}
 		
 		addMessage(redirectAttributes, "保存机构'" + office.getName() + "'成功");
-		Long id = office.getParentId().intValue()==0 ? null : office.getParentId();
-		return "redirect:"  + "/sys/office/list?id="+id+"&parentIds="+office.getParentIds();
+		//Long id = office.getParentId().intValue()==0 ? null : office.getParentId();
+		return "redirect:"  + "/sys/office/list?id="+office.getId()+"&parentIds="+office.getParentIds();
 	}
 	
 	@RequiresPermissions("sys:office:edit")
